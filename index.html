@@ -43,6 +43,7 @@
             color: var(--text-color);
             background-color: var(--bg-color);
             transition: var(--transition);
+            overflow-x: hidden; /* Mencegah scroll horizontal */
         }
 
         body.dark-mode {
@@ -76,6 +77,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
+            position: relative;
         }
 
         .logo {
@@ -125,10 +127,47 @@
             font-size: 1.3rem;
             color: var(--text-color);
             transition: var(--transition);
+            margin-left: 0;
         }
 
         .dark-mode .theme-toggle {
             color: var(--dark-text-color);
+        }
+
+        /* ===== HAMBURGER MENU STYLES (NEW) ===== */
+        .menu-toggle {
+            display: none; /* Sembunyikan di Laptop */
+            flex-direction: column;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            z-index: 101;
+            margin-right: -110px;
+        }
+
+        .menu-toggle .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            margin: 3px 0;
+            transition: 0.4s;
+            border-radius: 2px;
+        }
+
+        .dark-mode .menu-toggle .bar {
+            background-color: var(--dark-text-color);
+        }
+
+        /* Animasi Hamburger jadi X */
+        .menu-toggle.is-active .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .menu-toggle.is-active .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.is-active .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
         }
 
         /* Hero Section */
@@ -681,30 +720,29 @@
             transform: translateY(-3px);
         }
 
-        /* Responsive Design */
+        /* ===== RESPONSIVE DESIGN (HP & TABLET) ===== */
         @media (max-width: 992px) {
             .hero-content {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-            
             .profile-info {
                 padding-right: 0;
                 text-align: center;
             }
-            
             .cta-buttons {
                 justify-content: center;
             }
         }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            /* Perbaikan Jarak (Padding) di HP */
+            .container {
+                padding: 0 25px;
             }
-            
+
             .name {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             
             .section-title {
@@ -728,26 +766,59 @@
             .comments-section {
                 padding: 25px;
             }
+
+            /* ===== MENU MOBILE (HAMBURGER) ===== */
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%; /* Turun tepat di bawah header */
+                left: 0;
+                width: 100%;
+                background-color: var(--card-bg);
+                border-bottom: 2px solid var(--border-color);
+                padding: 20px 0;
+                transform: translateY(-150%); /* Sembunyi ke atas */
+                transition: transform 0.4s ease-in-out;
+                z-index: 99;
+                text-align: center;
+                box-shadow: var(--shadow);
+            }
+
+            .dark-mode .nav-links {
+                background-color: var(--dark-card-bg);
+                border-color: var(--dark-border-color);
+                box-shadow: var(--dark-shadow);
+            }
+
+            .nav-links.active {
+                transform: translateY(0); /* Muncul */
+            }
+
+            .nav-links li {
+                margin: 15px 0;
+                margin-left: 0;
+            }
         }
 
         @media (max-width: 576px) {
             .hero {
                 padding: 40px 0;
             }
-            
             .section, .ongoing-section {
                 padding: 50px 0;
             }
-            
             .comments-section {
                 padding: 20px;
             }
-            
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
             .ongoing-cards {
                 grid-template-columns: 1fr;
             }
@@ -755,10 +826,10 @@
     </style>
 </head>
 <body>
-    <!-- Header dengan Navigasi -->
     <header>
         <div class="container nav-container">
             <a href="#" class="logo">Portofolio</a>
+
             <ul class="nav-links">
                 <li><a href="#home">Beranda</a></li>
                 <li><a href="#skills">Keahlian</a></li>
@@ -766,13 +837,19 @@
                 <li><a href="#comments">Komentar</a></li>
                 <li><a href="#contact">Kontak</a></li>
             </ul>
+
+            <button class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
             <button class="theme-toggle" id="themeToggle">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
     </header>
 
-    <!-- Hero Section dengan Profil -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
@@ -795,7 +872,6 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
     <section class="section" id="skills">
         <div class="container">
             <h2 class="section-title">Keahlian & Teknologi</h2>
@@ -832,7 +908,6 @@
         </div>
     </section>
 
-    <!-- Ongoing Projects Section -->
     <section class="ongoing-section" id="ongoing">
         <div class="container ongoing-container">
             <h2 class="section-title">Proyek Ongoing</h2>
@@ -851,7 +926,6 @@
             </div>
             
             <div class="ongoing-cards">
-                <!-- Project 1 - Ongoing -->
                 <div class="ongoing-card">
                     <div class="ongoing-card-icon">
                         <i class="fas fa-laptop-code"></i>
@@ -865,7 +939,6 @@
                     <div class="progress-text">gimana niat dan mood</div>
                 </div>
                 
-                <!-- Project 2 - Ongoing -->
                 <div class="ongoing-card">
                     <div class="ongoing-card-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -879,7 +952,6 @@
                     <div class="progress-text">Masih dalam tahap mengumpulkan niat</div>
                 </div>
                 
-                <!-- Project 3 - Ongoing -->
                 <div class="ongoing-card">
                     <div class="ongoing-card-icon">
                         <i class="fa-solid fa-school"></i>
@@ -896,7 +968,6 @@
         </div>
     </section>
 
-    <!-- Comments Section -->
     <section class="section" id="comments">
         <div class="container">
             <h2 class="section-title">Komentar & Ulasan</h2>
@@ -920,14 +991,12 @@
                 </div>
                 
                 <div class="comment-list" id="commentList">
-                    <!-- Komentar akan ditampilkan di sini dari localStorage -->
                     <div class="no-comments" id="noComments">Belum ada komentar. Jadilah yang pertama memberikan komentar!</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer id="contact">
         <div class="container">
             <div class="footer-content">
@@ -945,260 +1014,276 @@
         </div>
     </footer>
 
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-    // ===== 1. KONFIGURASI SUPABASE =====
-    const SUPABASE_URL = 'https://blfyebuzpfqrvkbyeueo.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsZnllYnV6cGZxcnZrYnlldWVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxODk5NzAsImV4cCI6MjA4NDc2NTk3MH0.16bhHdFwHQe86wE3affPc1wAMDgQQnjm4oBz86SUMu8';
-    
-    // PERBAIKAN DI SINI: Ganti nama variabel jadi 'supabaseClient' agar tidak bentrok
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // ===== 2. FITUR UI (DARK MODE & SCROLL) =====
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('i');
-    
-    // Cek preferensi mode dari localStorage
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-    }
-    
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-    }
-
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // ===== 3. SISTEM KOMENTAR SUPABASE (CLOUD) =====
-    const commentForm = document.getElementById('commentForm');
-    const commentList = document.getElementById('commentList');
-    const noCommentsMsg = document.getElementById('noComments');
-    
-    const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-
-    function getTimeRemaining(createdDate) {
-        const now = Date.now();
-        const createdTime = new Date(createdDate).getTime();
-        const age = now - createdTime;
-        const remaining = ONE_WEEK_MS - age;
+    <script>
+        // ===== 1. KONFIGURASI SUPABASE =====
+        const SUPABASE_URL = 'https://blfyebuzpfqrvkbyeueo.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsZnllYnV6cGZxcnZrYnlldWVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxODk5NzAsImV4cCI6MjA4NDc2NTk3MH0.16bhHdFwHQe86wE3affPc1wAMDgQQnjm4oBz86SUMu8';
         
-        if (remaining <= 0) return { expired: true, days: 0, hours: 0, minutes: 0 };
-        
-        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        
-        return { expired: false, days, hours, minutes };
-    }
+        // PERBAIKAN PENTING: Menggunakan 'supabaseClient'
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function escapeHtml(text) {
-        if (!text) return text;
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
+        // ===== 2. UI LOGIC (Dark Mode, Navbar, Scroll) =====
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
 
-    // --- FUNGSI UTAMA: AMBIL DATA ---
-    async function fetchComments() {
-        // PERBAIKAN: Gunakan 'supabaseClient'
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.error('Error Supabase:', error);
-            return;
-        }
-
-        renderComments(data);
-    }
-
-    // --- FUNGSI RENDER ---
-    function renderComments(comments) {
-        commentList.innerHTML = '';
-        const now = Date.now();
-
-        const activeComments = comments.filter(c => {
-            const age = now - new Date(c.created_at).getTime();
-            return age < ONE_WEEK_MS;
-        });
-        
-        if (activeComments.length === 0) {
-            noCommentsMsg.style.display = 'block';
-            return;
+        // Logic Dark Mode
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
         }
         
-        noCommentsMsg.style.display = 'none';
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
+        // Logic Hamburger Menu (Mobile)
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('is-active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Tutup menu saat link diklik
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('is-active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== 3. SISTEM KOMENTAR (DATABASE) =====
+        const commentForm = document.getElementById('commentForm');
+        const commentList = document.getElementById('commentList');
+        const noCommentsMsg = document.getElementById('noComments');
         
-        activeComments.forEach((comment) => {
-            const commentItem = document.createElement('div');
-            commentItem.className = 'comment-item';
+        const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+        function getTimeRemaining(createdDate) {
+            const now = Date.now();
+            const createdTime = new Date(createdDate).getTime();
+            const age = now - createdTime;
+            const remaining = ONE_WEEK_MS - age;
             
-            const timeRemaining = getTimeRemaining(comment.created_at);
+            if (remaining <= 0) return { expired: true, days: 0, hours: 0, minutes: 0 };
             
-            if (timeRemaining.days < 1) {
-                commentItem.classList.add('expiring-soon');
-            } else if (timeRemaining.days < 2) {
-                commentItem.classList.add('expiring');
-            }
+            const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
             
-            let timeRemainingText = '';
-            if (timeRemaining.days > 0) {
-                timeRemainingText = `Akan terhapus dalam ${timeRemaining.days} hari`;
-            } else if (timeRemaining.hours > 0) {
-                timeRemainingText = `Akan terhapus dalam ${timeRemaining.hours} jam`;
-            } else {
-                timeRemainingText = `Akan terhapus dalam ${timeRemaining.minutes} menit`;
+            return { expired: false, days, hours, minutes };
+        }
+
+        function escapeHtml(text) {
+            if (!text) return text;
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Ambil Data dari Supabase
+        async function fetchComments() {
+            const { data, error } = await supabaseClient
+                .from('comments')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error Supabase:', error);
+                return;
             }
 
-            const dateStr = new Date(comment.created_at).toLocaleDateString('id-ID', {
-                year: 'numeric', month: 'long', day: 'numeric'
+            renderComments(data);
+        }
+
+        // Tampilkan Data ke HTML
+        function renderComments(comments) {
+            commentList.innerHTML = '';
+            const now = Date.now();
+
+            const activeComments = comments.filter(c => {
+                const age = now - new Date(c.created_at).getTime();
+                return age < ONE_WEEK_MS;
             });
             
-            commentItem.innerHTML = `
-                <div class="comment-header">
-                    <span class="comment-author">${escapeHtml(comment.name)}</span>
-                    <span class="comment-date">${dateStr}</span>
-                </div>
-                <p class="comment-text">${escapeHtml(comment.text)}</p>
-                <div class="comment-expiry">
-                    <i class="far fa-clock"></i> ${timeRemainingText}
-                </div>
-            `;
+            if (activeComments.length === 0) {
+                noCommentsMsg.style.display = 'block';
+                return;
+            }
             
-            commentList.appendChild(commentItem);
-        });
-    }
+            noCommentsMsg.style.display = 'none';
+            
+            activeComments.forEach((comment) => {
+                const commentItem = document.createElement('div');
+                commentItem.className = 'comment-item';
+                
+                const timeRemaining = getTimeRemaining(comment.created_at);
+                
+                if (timeRemaining.days < 1) {
+                    commentItem.classList.add('expiring-soon');
+                } else if (timeRemaining.days < 2) {
+                    commentItem.classList.add('expiring');
+                }
+                
+                let timeRemainingText = '';
+                if (timeRemaining.days > 0) {
+                    timeRemainingText = `Akan terhapus dalam ${timeRemaining.days} hari`;
+                } else if (timeRemaining.hours > 0) {
+                    timeRemainingText = `Akan terhapus dalam ${timeRemaining.hours} jam`;
+                } else {
+                    timeRemainingText = `Akan terhapus dalam ${timeRemaining.minutes} menit`;
+                }
 
-    // --- FUNGSI KIRIM KOMENTAR ---
-    async function addComment(name, text) {
-        const btn = commentForm.querySelector('button');
-        const originalText = btn.innerText;
-        btn.innerText = 'Mengirim...';
-        btn.disabled = true;
-
-        // PERBAIKAN: Gunakan 'supabaseClient'
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .insert([{ name: name, text: text }])
-            .select();
-
-        btn.innerText = originalText;
-        btn.disabled = false;
-
-        if (error) {
-            alert('Gagal mengirim: ' + error.message);
-            console.error(error);
-        } else {
-            showNotification('Komentar berhasil ditambahkan!');
-            document.getElementById('name').value = '';
-            document.getElementById('comment').value = '';
-            fetchComments();
+                const dateStr = new Date(comment.created_at).toLocaleDateString('id-ID', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+                
+                commentItem.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${escapeHtml(comment.name)}</span>
+                        <span class="comment-date">${dateStr}</span>
+                    </div>
+                    <p class="comment-text">${escapeHtml(comment.text)}</p>
+                    <div class="comment-expiry">
+                        <i class="far fa-clock"></i> ${timeRemainingText}
+                    </div>
+                `;
+                
+                commentList.appendChild(commentItem);
+            });
         }
-    }
-    
-    if (commentForm) {
-        commentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nameInput = document.getElementById('name');
-            const commentInput = document.getElementById('comment');
-            const name = nameInput.value.trim();
-            const comment = commentInput.value.trim();
-            
-            if (name && comment) {
-                addComment(name, comment);
+
+        // Kirim Komentar ke Supabase
+        async function addComment(name, text) {
+            const btn = commentForm.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Mengirim...';
+            btn.disabled = true;
+
+            const { data, error } = await supabaseClient
+                .from('comments')
+                .insert([{ name: name, text: text }])
+                .select();
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+
+            if (error) {
+                alert('Gagal mengirim: ' + error.message);
+                console.error(error);
             } else {
-                alert('Harap isi nama dan komentar!');
+                showNotification('Komentar berhasil ditambahkan!');
+                document.getElementById('name').value = '';
+                document.getElementById('comment').value = '';
+                fetchComments();
             }
-        });
-    }
-    
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed; top: 20px; right: 20px;
-            background-color: var(--accent-color); color: white;
-            padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); z-index: 1000;
-            transform: translateX(150%); transition: transform 0.3s ease;
-        `;
-        notification.textContent = message;
-        document.body.appendChild(notification);
+        }
         
-        setTimeout(() => notification.style.transform = 'translateX(0)', 10);
-        setTimeout(() => {
-            notification.style.transform = 'translateX(150%)';
+        if (commentForm) {
+            commentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nameInput = document.getElementById('name');
+                const commentInput = document.getElementById('comment');
+                const name = nameInput.value.trim();
+                const comment = commentInput.value.trim();
+                
+                if (name && comment) {
+                    addComment(name, comment);
+                } else {
+                    alert('Harap isi nama dan komentar!');
+                }
+            });
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px;
+                background-color: var(--accent-color); color: white;
+                padding: 15px 20px; border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); z-index: 1000;
+                transform: translateX(150%); transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 10);
             setTimeout(() => {
-                if (notification.parentNode) document.body.removeChild(notification);
-            }, 300);
-        }, 3000);
-    }
+                notification.style.transform = 'translateX(150%)';
+                setTimeout(() => {
+                    if (notification.parentNode) document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
 
-    // ===== ANIMASI ON SCROLL =====
-    const progressBars = document.querySelectorAll('.progress');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {} 
+        // ===== ANIMASI SCROLL =====
+        const progressBars = document.querySelectorAll('.progress');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {} 
+            });
+        }, { threshold: 0.5 });
+        
+        progressBars.forEach(bar => observer.observe(bar));
+
+        const ongoingCards = document.querySelectorAll('.ongoing-card');
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        ongoingCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            cardObserver.observe(card);
         });
-    }, { threshold: 0.5 });
-    
-    progressBars.forEach(bar => observer.observe(bar));
 
-    const ongoingCards = document.querySelectorAll('.ongoing-card');
-    const cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+        // ===== START =====
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchComments();
+            setInterval(fetchComments, 30000);
         });
-    }, { threshold: 0.1 });
-    
-    ongoingCards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        cardObserver.observe(card);
-    });
-
-    // ===== LOAD PERTAMA KALI =====
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchComments();
-        setInterval(fetchComments, 30000);
-    });
-</script>
+    </script>
 </body>
 </html>
